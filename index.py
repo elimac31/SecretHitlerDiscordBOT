@@ -15,12 +15,12 @@ def getToken():
 
 
 client = commands.Bot(command_prefix='~')
-client.run(getToken())
+
 
 @client.command()
 async def ping(ctx):
     await ctx.send(f'Pong! {round (client.latency * 1000)}ms')
 
-
+client.run(getToken())
 
 
