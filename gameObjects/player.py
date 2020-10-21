@@ -5,6 +5,9 @@ it keeps track of who the player is, their role, thier party, and if they have b
 """
 class player:
 
+    """
+    Constructor takes in the name, role, and party of the player (all as strings)
+    """
     def __init__(self, name, role, party):
         self.name = name
         self.role = role
