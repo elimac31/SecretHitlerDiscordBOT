@@ -22,3 +22,15 @@ class policyCard:
     """
     def getPolicy(self):
         return self.policy
+
+    """
+    returns true if this card is LIBERAL, false otherwise
+    """
+    def isLiberal(self):
+        return (self.policy == self.LIBERAL)
+
+    """
+    returns true if this card is FACIST, false otherwise
+    """
+    def isFacist(self):
+        return (self.policy == self.FACIST)
