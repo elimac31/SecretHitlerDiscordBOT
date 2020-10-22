@@ -17,6 +17,10 @@ class gameMain:
         self.deck.shuffleDeck()
         self.tempPlayerList = players
         self.playerList = []
+        self.currentPresident: gameObjects.player.player
+        self.currentChancellor: gameObjects.player.player
+        self.nextPresident: gameObjects.player.player
+        self.nextPresidentIndex = 0
 
     def roleSelection(self):
         random.shuffle(self.tempPlayerList)
@@ -36,17 +40,23 @@ class gameMain:
         else:
             roleList = self.ROLE_LIST_10
 
-        for x in range(len(self.tempPlayerList)):
+        for x in range(0, len(self.tempPlayerList)):
             if roleList[x] == "LIBERAL":
                 self.playerList.append(gameObjects.player.player(self.tempPlayerList[x], roleList[x], "LIBERAL"))
             else:
                 self.playerList.append(gameObjects.player.player(self.tempPlayerList[x], roleList[x], "FASCIST"))
+        self.currentPresident = random.choice(self.playerList)
+        self.nextPresidentIndex = self.playerList.index(self.currentPresident) + 1
 
     def startUp(self):
         pass
 
-    def election(self):
-        pass
+    def election(self, yes: int, no: int):
+        if(yes > no):
+            self.gameBoard.passElection()
+            return 0
+        else:
+            return self.gameBoard.failElection()
 
     def legislativeSession(self):
         pass
