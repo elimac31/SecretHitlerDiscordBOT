@@ -10,13 +10,13 @@ class policyDeck:
 
     """
     initializes a deck of policyCards
-    starts with 11 FACIST policies and 6 LIBERAL policies
+    starts with 11 FASCIST policies and 6 LIBERAL policies
     all cards are initially added to the discard so they can be shuffled to the drawpile
     """
     def __init__(self):
         self.policiesDrawpile = []
         self.policiesDiscard = []
-        self.facistCount = 11
+        self.fascistCount = 11
         self.liberalCount = 6
         for x in range(11):
             self.policiesDiscard.append(policyCard(policyCard.FACIST))
@@ -29,7 +29,7 @@ class policyDeck:
     def discard(self, card:policyCard):
         self.policiesDiscard.append(card)
         if card.isFacist():
-            self.facistCount += 1
+            self.fascistCount += 1
         else:
             self.liberalCount += 1
 
@@ -40,7 +40,7 @@ class policyDeck:
     def drawOne(self):
         card = self.policiesDrawpile.pop()
         if card.isFacist():
-            self.facistCount -= 1
+            self.fascistCount -= 1
         else:
             self.liberalCount -= 1
         return card
