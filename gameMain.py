@@ -54,12 +54,41 @@ class gameMain:
     def election(self, yes: int, no: int):
         if(yes > no):
             self.gameBoard.passElection()
-            return 0
+            return 0, self.deck.drawThree()
         else:
-            return self.gameBoard.failElection()
+            return self.gameBoard.failElection(), None
 
-    def legislativeSession(self):
+    def discard(self, card: gameObjects.policyCard.policyCard):
+        self.deck.discard(card)
+
+    def investigateLoyalty(self):
         pass
+
+    def specialElection(self):
+        pass
+
+    def policyPeek(self):
+        pass
+
+    def execution(self):
+        pass
+
+
+    def legislativeSession(self, card: gameObjects.policyCard.policyCard):
+        presidentialPower = self.gameBoard.playPolicy(card)
+
+        if presidentialPower == "POLICY_PEEK":
+            self.policyPeek()
+        elif presidentialPower == "INVESTIGATE_LOYALTY":
+            self.investigateLoyalty()
+        elif presidentialPower == "CALL_SPECIAL_ELECTION":
+            self.specialElection()
+        elif presidentialPower == "EXECUTION":
+            self.execution()
+        elif presidentialPower == "END":
+            pass
+        pass
+
 
     def gameOver(self):
         pass
