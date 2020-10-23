@@ -44,12 +44,15 @@ async def m(ctx, args):
 async def start(ctx):
     await ctx.send('<@' + str(ctx.author.id) + '> has started a game of Secret Hitler! react to this message in the next two minutes to join!')
     print(client.cached_messages[len(client.cached_messages) - 1].channel.id)
-    startPromptMessages{client.cached_messages[len(client.cached_messages) - 1].channel.id} = client.cached_messages[len(client.cached_messages) - 1]
+    startPromptMessages[client.cached_messages[len(client.cached_messages) - 1].channel.id] = client.cached_messages[len(client.cached_messages) - 1]
+    print("og:" + str(client.cached_messages[len(client.cached_messages) - 1]))
 
 @client.event
 async def on_reaction_add(reaction, user):
+    print("react: " + str(reaction.message))
     if startPromptMessages[reaction.message.channel.id] == reaction.message:
-        print(reaction)
+        print("DAFDSFSDFSDFFSD")
+        print(str(reaction.name))
 
 
 client.run(getToken())
