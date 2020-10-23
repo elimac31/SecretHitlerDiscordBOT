@@ -20,7 +20,8 @@ def getToken():
 client = commands.Bot(command_prefix='~')
 
 
-usersInGames = [dict]
+usersInGames = {}
+startPromptMessages = {}
 
 @client.command()
 async def ping(ctx):
@@ -41,8 +42,14 @@ async def m(ctx, args):
 
 @client.command()
 async def start(ctx):
-
     await ctx.send('<@' + str(ctx.author.id) + '> has started a game of Secret Hitler! react to this message in the next two minutes to join!')
+    print(client.cached_messages[len(client.cached_messages) - 1].channel.id)
+    startPromptMessages{client.cached_messages[len(client.cached_messages) - 1].channel.id} = client.cached_messages[len(client.cached_messages) - 1]
+
+@client.event
+async def on_reaction_add(reaction, user):
+    if startPromptMessages[reaction.message.channel.id] == reaction.message:
+        print(reaction)
 
 
 client.run(getToken())
@@ -50,7 +57,7 @@ client.run(getToken())
 
 """
 --------------------------------------------------------------------------------------------------
-|Im gonna keep this as a divider incase i deside to move the gameMain back to its own class later|
+|Im gonna keep this as a divider in case i decide to move the gameMain back to its own class later|
 --------------------------------------------------------------------------------------------------
 """
 class gameMain:
