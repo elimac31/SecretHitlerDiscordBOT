@@ -19,7 +19,7 @@ def getToken():
 
 client = commands.Bot(command_prefix='~')
 
-
+nameCount = 1
 usersInGames = {}
 startPromptMessages = {}
 
@@ -42,24 +42,25 @@ async def m(ctx, args):
 
 @client.command()
 async def start(ctx):
-    await ctx.send('<@' + str(ctx.author.id) + '> has started a game of Secret Hitler! react to this message in the next two minutes to join!')
-
-    await startPromptMessages[ctx.channel.id] = ctx.channel.last_message_id
-    print("og:" + str(startPromptMessages[ctx.channel.id]))
-
-    """
-    print(client.cached_messages[len(client.cached_messages) - 1].channel.id)
-    startPromptMessages[client.cached_messages[len(client.cached_messages) - 1].channel.id] = client.cached_messages[len(client.cached_messages) - 1]
-    print("og:" + str(client.cached_messages[len(client.cached_messages) - 1]))
-    print("oh:" + str(startPromptMessages[client.cached_messages[len(client.cached_messages) - 1].channel.id]))
-    """
+    startPromptMessages[ctx.channel.id] = await ctx.send('<@' + str(ctx.author.id) + '> has started a game of Secret Hitler! react to this message in the next two minutes to join!', delete_after = 120)
+    usersInGames[ctx.channel.id] = []
 
 @client.event
 async def on_reaction_add(reaction, user):
     print("react: " + str(reaction.message))
     if startPromptMessages[reaction.message.channel.id] == reaction.message:
-        print("DAFDSFSDFSDFFSD")
-        print(str(reaction.name))
+        usersInGames[reaction.message.channel.id].append(user)
+
+@client.event
+async def on_message_delete(message):
+    channel = message.channel
+    if startPromptMessages[channel.id] == message:
+        if len(usersInGames[channel.id]) >= 5:
+            gameMain(usersInGames[channel.id])
+            new_game_channel = await channel.guild.create_text_channel("Secret Hitler " + nameCount)
+
+        else:
+            await channel.send("There are not enough players to start, canceling start request")
 
 
 client.run(getToken())
