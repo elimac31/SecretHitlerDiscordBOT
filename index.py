@@ -56,11 +56,26 @@ async def on_message_delete(message):
     channel = message.channel
     if startPromptMessages[channel.id] == message:
         if len(usersInGames[channel.id]) >= 5:
+
             gameMain(usersInGames[channel.id])
-            new_game_channel = await channel.guild.create_text_channel("Secret Hitler " + nameCount)
+
+            overwrite1 = discord.PermissionOverwrite()
+            overwrite1.send_messages = False
+            overwrite1.read_messages = False
+            overwrite2 = discord.PermissionOverwrite()
+            overwrite2.send_messages = True
+            overwrite2.read_messages = True
+
+            gameRole = await channel.guild.create_role(name="Secret Hitler " + str(nameCount))
+
+            overwriteDict = {channel.guild.default_role: overwrite1, channel.guild.me: overwrite2, gameRole: overwrite2}
+            new_game_channel = await channel.guild.create_text_channel("Secret Hitler " + str(nameCount),overwrites=overwriteDict, category=None,reason=None)
 
         else:
             await channel.send("There are not enough players to start, canceling start request")
+
+
+
 
 
 client.run(getToken())
