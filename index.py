@@ -74,8 +74,12 @@ async def on_message_delete(message):
             overwriteDict = {channel.guild.default_role: overwrite1, channel.guild.me: overwrite2, gameRole: overwrite2}
             new_game_channel = await channel.guild.create_text_channel("Secret Hitler " + str(nameCount), overwrites=overwriteDict, category=None,reason=None)
             new_voice_channel = await channel.guild.create_voice_channel("Secret Hitler " + str(nameCount), overwrites=overwriteDict, category=None,reason=None)
+            usersInGames[new_game_channel.id] = usersInGames.pop(channel.id)
 
-            gameChannels[new_game_channel] = [new_voice_channel, gameRole]
+            gameObject = gameMain(usersInGames[new_game_channel.id])
+            gameObject.roleSelection()
+            gameChannels[new_game_channel] = [new_voice_channel, gameRole, gameObject]
+
 
 
         else:
