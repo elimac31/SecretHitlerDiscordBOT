@@ -22,6 +22,7 @@ client = commands.Bot(command_prefix='~')
 nameCount = 1
 usersInGames = {}
 startPromptMessages = {}
+gameChannels = {}
 
 @client.command()
 async def ping(ctx):
@@ -50,6 +51,8 @@ async def on_reaction_add(reaction, user):
     print("react: " + str(reaction.message))
     if startPromptMessages[reaction.message.channel.id] == reaction.message:
         usersInGames[reaction.message.channel.id].append(user)
+    if len(usersInGames) == 10:
+        reaction.message.delete()
 
 @client.event
 async def on_message_delete(message):
@@ -69,7 +72,11 @@ async def on_message_delete(message):
             gameRole = await channel.guild.create_role(name="Secret Hitler " + str(nameCount))
 
             overwriteDict = {channel.guild.default_role: overwrite1, channel.guild.me: overwrite2, gameRole: overwrite2}
-            new_game_channel = await channel.guild.create_text_channel("Secret Hitler " + str(nameCount),overwrites=overwriteDict, category=None,reason=None)
+            new_game_channel = await channel.guild.create_text_channel("Secret Hitler " + str(nameCount), overwrites=overwriteDict, category=None,reason=None)
+            new_voice_channel = await channel.guild.create_voice_channel("Secret Hitler " + str(nameCount), overwrites=overwriteDict, category=None,reason=None)
+
+            gameChannels[new_game_channel] = [new_voice_channel, gameRole]
+
 
         else:
             await channel.send("There are not enough players to start, canceling start request")
