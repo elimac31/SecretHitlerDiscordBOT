@@ -116,11 +116,12 @@ class gameMain:
         self.currentChancellor: gameObjects.player.player
         self.nextPresident: gameObjects.player.player
         self.nextPresidentIndex = 0
+        self.playerCount = len(players)
 
     def roleSelection(self):
         random.shuffle(self.tempPlayerList)
         roleList = []
-        playerCount = len(self.tempPlayerList)
+        playerCount = self.playerCount
 
         if playerCount == 5:
             roleList = self.ROLE_LIST_5
@@ -147,11 +148,19 @@ class gameMain:
         pass
 
     def election(self, yes: int, no: int):
+
+        self.nextPresidentIndex += 1
+        if self.nextPresidentIndex >= self.playerCount:
+            self.nextPresidentIndex = 0
+
         if(yes > no):
             self.gameBoard.passElection()
             return 0, self.deck.drawThree()
         else:
             return self.gameBoard.failElection(), None
+
+    def ThreeFailedElections(self):
+
 
     def discard(self, card: gameObjects.policyCard.policyCard):
         self.deck.discard(card)
