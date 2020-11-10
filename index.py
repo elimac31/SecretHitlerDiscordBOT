@@ -46,6 +46,12 @@ async def start(ctx):
     startPromptMessages[ctx.channel.id] = await ctx.send('<@' + str(ctx.author.id) + '> has started a game of Secret Hitler! react to this message in the next two minutes to join!', delete_after = 120)
     usersInGames[ctx.channel.id] = []
 
+@client.command()
+async def chooseCandidate(ctx, args):
+    president = gameChannels[ctx.channel][2].getPresident()
+
+    if(ctx.author == )
+
 @client.event
 async def on_reaction_add(reaction, user):
     print("react: " + str(reaction.message))
@@ -112,8 +118,12 @@ class gameMain:
         self.deck.shuffleDeck()
         self.tempPlayerList = players
         self.playerList = []
-        self.currentPresident: gameObjects.player.player
-        self.currentChancellor: gameObjects.player.player
+
+        self.currentPresident= gameObjects.player.player
+        self.currentChancellor= gameObjects.player.player
+        self.lastPresident = gameObjects.player.player
+        self.lastChancellor = gameObjects.player.player
+
         self.nextPresident: gameObjects.player.player
         self.nextPresidentIndex = 0
         self.playerCount = len(players)
@@ -141,29 +151,53 @@ class gameMain:
                 self.playerList.append(gameObjects.player.player(self.tempPlayerList[x], roleList[x], "LIBERAL"))
             else:
                 self.playerList.append(gameObjects.player.player(self.tempPlayerList[x], roleList[x], "FASCIST"))
+        random.shuffle(self.playerList)
         self.currentPresident = random.choice(self.playerList)
         self.nextPresidentIndex = self.playerList.index(self.currentPresident) + 1
 
-    def startUp(self):
-        pass
-
-    def election(self, yes: int, no: int):
-
+    def getNextPresident(self):
+        self.currentPresident = self.playerList[self.nextPresidentIndex]
         self.nextPresidentIndex += 1
         if self.nextPresidentIndex >= self.playerCount:
             self.nextPresidentIndex = 0
 
+    def startUp(self):
+        pass
+
+    def election(self, yes: int, no: int, newChanncellor: gameObjects.player.player):
+
+
+
         if(yes > no):
             self.gameBoard.passElection()
+            self.lastPresident = self.currentPresident
+            self.currentChanncellor = newChanncellor
+            self.lastChancellor = self.newChanncellor
             return 0, self.deck.drawThree()
         else:
             return self.gameBoard.failElection(), None
 
     def ThreeFailedElections(self):
+        self.lastChancellor = None
+        self.lastPresident = None
+        self.gameBoard.passElection()
+        passingPolicy = self.deck.drawOne()
+        self.gameBoard.playPolicy(passingPolicy)
+        return(passingPolicy)
 
+    def isChanncellorValid(self, candidate: gameObjects.player.player):
+        if candidate == self.lastChancellor:
+            return False
+        elif candidate == self.lastPresident:
+            return False
+        else:
+            return True
 
     def discard(self, card: gameObjects.policyCard.policyCard):
         self.deck.discard(card)
+
+    def getPresident(self):
+        return self.currentPresident
 
     def investigateLoyalty(self):
         pass
